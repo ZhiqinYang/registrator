@@ -139,7 +139,10 @@ func marshal(service *bridge.Service) ([]byte, error) {
 	addr.Metadata = service
 	addr.Addr = fmt.Sprintf("%s:%d", service.IP, service.Port)
 	addr.ServerName = service.Name
-	addr.Type = resolver.GRPCLB
+	addr.Type = resolver.Backend
+	if t, _ := service.Attrs["resolver_type"]; t == "LB" {
+		addr.Type = resolver.GRPCLB
+	}
 	return json.Marshal(addr)
 }
 
